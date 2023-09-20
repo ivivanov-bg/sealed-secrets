@@ -40,17 +40,17 @@ changelog:
       - '^helm:'
       - '^integration:'
       - '^vendor_jsonnet:'
-signs:
-  - cmd: cosign
-    stdin: '{{ .Env.COSIGN_PASSWORD }}'
-    output: true
-    artifacts: all
-    args:
-      - 'sign-blob'
-      - '--key=/tmp/cosign.key'
-      - '--output-signature=${signature}'
-      - '--yes'
-      - '${artifact}'
+#signs:
+#  - cmd: cosign
+#    stdin: '{{ .Env.COSIGN_PASSWORD }}'
+#    output: true
+#    artifacts: all
+#    args:
+#      - 'sign-blob'
+#      - '--key=/tmp/cosign.key'
+#      - '--output-signature=${signature}'
+#      - '--yes'
+#      - '${artifact}'
 release:
   name_template: "{{ .ProjectName }}-v{{ .Version }}"
   header: |
