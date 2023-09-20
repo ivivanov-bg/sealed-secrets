@@ -97,7 +97,7 @@ func tmpfile(t *testing.T, contents []byte) string {
 }
 
 func TestParseKey(t *testing.T) {
-	key, err := ParseKey(strings.NewReader(testCert))
+	key, err := ParseKey(strings.NewReader(testCert), false)
 	if err != nil {
 		t.Fatalf("Failed to parse test key: %v", err)
 	}
@@ -181,7 +181,7 @@ func TestOpenCertFile(t *testing.T) {
 }
 
 func TestSealWithMultiDocSecrets(t *testing.T) {
-	key, err := ParseKey(strings.NewReader(testCert))
+	key, err := ParseKey(strings.NewReader(testCert), false)
 	if err != nil {
 		t.Fatalf("Failed to parse gotSecrets key: %v", err)
 	}
@@ -261,7 +261,7 @@ func TestSealWithMultiDocSecrets(t *testing.T) {
 }
 
 func TestSeal(t *testing.T) {
-	key, err := ParseKey(strings.NewReader(testCert))
+	key, err := ParseKey(strings.NewReader(testCert), false)
 	if err != nil {
 		t.Fatalf("Failed to parse test key: %v", err)
 	}
@@ -835,7 +835,7 @@ func sealTestItem(certFilename, secretNS, secretName, secretValue string, scope 
 		return "", err
 	}
 	defer f.Close()
-	pubKey, err := ParseKey(f)
+	pubKey, err := ParseKey(f, false)
 	if err != nil {
 		return "", err
 	}

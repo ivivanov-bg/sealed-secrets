@@ -47,6 +47,7 @@ type cliFlags struct {
 	dumpCert       bool
 	allowEmptyData bool
 	validateSecret bool
+	allowExpiredCert bool
 	mergeInto      string
 	raw            bool
 	secretName     string
@@ -98,6 +99,7 @@ func bindFlags(f *cliFlags, fs *flag.FlagSet) {
 	fs.Var(&f.sealingScope, "scope", "Set the scope of the sealed secret: strict, namespace-wide, cluster-wide (defaults to strict). Mandatory for --raw, otherwise the 'sealedsecrets.bitnami.com/cluster-wide' and 'sealedsecrets.bitnami.com/namespace-wide' annotations on the input secret can be used to select the scope.")
 	fs.BoolVar(&f.reEncrypt, "rotate", false, "")
 	fs.BoolVar(&f.reEncrypt, "re-encrypt", false, "Re-encrypt the given sealed secret to use the latest cluster key.")
+	fs.BoolVar(&f.allowExpiredCert, "allow-expired-cert", false, "Allow using expired certificate when sealing secrets")
 	_ = fs.MarkDeprecated("rotate", "please use --re-encrypt instead")
 
 	fs.BoolVar(&f.unseal, "recovery-unseal", false, "Decrypt a sealed secrets file obtained from stdin, using the private key passed with --recovery-private-key. Intended to be used in disaster recovery mode.")
@@ -197,7 +199,7 @@ func runCLI(w io.Writer, cfg *config) (err error) {
 		return err
 	}
 
-	pubKey, err := kubeseal.ParseKey(f)
+	pubKey, err := kubeseal.ParseKey(f, flags.allowExpiredCert)
 	if err != nil {
 		return err
 	}

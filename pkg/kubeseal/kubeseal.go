@@ -40,7 +40,7 @@ type ClientConfig interface {
 	Namespace() (string, bool, error)
 }
 
-func ParseKey(r io.Reader) (*rsa.PublicKey, error) {
+func ParseKey(r io.Reader, allowExpiredCert bool) (*rsa.PublicKey, error) {
 	data, err := io.ReadAll(r)
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ func ParseKey(r io.Reader) (*rsa.PublicKey, error) {
 		return nil, fmt.Errorf("expected RSA public key but found %v", certs[0].PublicKey)
 	}
 
-	if time.Now().After(certs[0].NotAfter) {
+	if !allowExpiredCert && time.Now().After(certs[0].NotAfter) {
 		return nil, fmt.Errorf("failed to encrypt using an expired certificate on %v", certs[0].NotAfter.Format("January 2, 2006"))
 	}
 
